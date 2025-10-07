@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="en">
+<+head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Guidance System</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #162d44ff;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://uploads.onecompiler.io/42nz75zht/43ty9hef9/1000023078.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-box .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .login-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .login-box input, .login-box select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .login-box input:focus, .login-box select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .login-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .login-error {
+            color: var(--accent-color);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Main App Styles */
+        .app-container {
+            display: none;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .user-info span {
+            margin-right: 1rem;
+        }
+
+        .logout-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            background-color: var(--secondary-color);
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            display: none;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section.active-section {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: var(--dark-color);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .recent-activity {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recent-activity ul {
+            list-style: none;
+        }
+
+        .recent-activity li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .recent-activity li:last-child {
+            border-bottom: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin-right: 0.5rem;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .cancel-btn {
+            background-color: #95a5a6;
+        }
+
+        .cancel-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .edit-btn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .resource-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-card .resource-type {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-card .resource-description {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .resource-card .resource-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resource-card .resource-link:hover {
+            text-decoration: underline;
+        }
+
+        .resource-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .form-section h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .sibling-container {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .add-sibling-btn, .remove-sibling-btn {
+            margin-top: 0.5rem;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 900px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: black;
+        }
+
+        .student-details-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .student-details-section h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            min-width: 200px;
+            color: var(--dark-color);
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .student-name-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .student-name-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--dark-color);
+            color: white;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin-bottom: 0.5rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                min-width: 100%;
+                margin-bottom: 0.2rem;
+            }
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-upcoming {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .status-completed {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .status-canceled {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* Role-based access styles */
+        .admin-only {
+            display: none;
+        }
+
+        .admin-only.show {
+            display: block;
+        }
+
+        .admin-only.inline {
+            display: inline-block;
+        }
+
+        /* Access denied message */
+        .access-denied {
+            text-align: center;
+            padding: 2rem;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="login-page">
+        <div class="login-box">
+            <h2>School Guidance System</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" required>
+                        <option value="">Select your role</option>
+                        <option value="admin">Administrator</option>
+                        <option value="counselor">Counselor</option>
+                    </select>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div class="login-error" id="login-error">Invalid username or password</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container" id="app-container">
+        <header>
+            <div class="header-left">
+                <h1>School Guidance System</h1>
+                <div class="user-info">
+                    <span id="user-role-display">Logged in as: </span>
+                    <button class="logout-btn" id="logout-btn">Logout</button>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" data-section="dashboard">Dashboard</a></li>
+                    <li><a href="#" data-section="students">Students</a></li>
+                    <li><a href="#" data-section="appointments">Appointments</a></li>
+                    <li><a href="#" data-section="resources">Resources</a></li>
+                    <li class="admin-only"><a href="#" data-section="admin">Admin</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section id="dashboard" class="active-section">
+                <h2>Guidance Dashboard</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Total Students</h3>
+                        <p id="total-students">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Upcoming Appointments</h3>
+                        <p id="upcoming-appointments">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Available Resources</h3>
+                        <p id="available-resources">0</p>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <ul id="activity-list"></ul>
+                </div>
+            </section>
+
+            <section id="students">
+                <h2>Student Management</h2>
+                <div class="student-controls">
+                    <button id="add-student-btn" class="admin-only">Add New Student</button>
+                    <input type="text" id="student-search" placeholder="Search students...">
+                </div>
+                <div class="student-form hidden" id="student-form">
+                    <h3>Student Information Form</h3>
+                    <form id="student-data-form">
+                        <input type="hidden" id="student-id">
+                        
+                        <div class="form-section">
+                            <h4>Basic Information</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="last-name">Last Name:</label>
+                                    <input type="text" id="last-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="first-name">First Name:</label>
+                                    <input type="text" id="first-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="middle-name">Middle Name:</label>
+                                    <input type="text" id="middle-name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="suffix">Suffix:</label>
+                                    <input type="text" id="suffix" placeholder="Jr, Sr, III">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="date-of-birth">Date of Birth:</label>
+                                    <input type="date" id="date-of-birth" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="place-of-birth">Place of Birth:</label>
+                                    <input type="text" id="place-of-birth" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="address">Home Address:</label>
+                                    <textarea id="address" rows="2" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="boarding-address">Boarding Address (if different):</label>
+                                    <textarea id="boarding-address" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h4>Academic Information</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="academic-year">Academic Year:</label>
+                                    <input type="text" id="academic-year" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="semester">Semester:</label>
+                                    <select id="semester" required>
+                                        <option value="">Select Semester</option>
+                                        <option value="1st">1st Semester</option>
+                                        <option value="2nd">2nd Semester</option>
+                                        <option value="summer">Summer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-type">Student Type:</label>
+                                    <select id="student-type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="new">New Student</option>
+                                        <option value="old">Old Student</option>
+                                        <option value="transfer">Transfer Student</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" id="transfer-info-container">
+                                <label for="transfer-info">Transfer Information (if applicable):</label>
+                                <textarea id="transfer-info" rows="2" placeholder="Previous school and course"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="course">Course:</label>
+                                <select id="course" required>
+                                    <option value="">Select Course</option>
+                                    <option value="Basic Education">Basic Education</option>
+                                    <option value="CS">Computer Science</option>
+                                    <option value="HM">Hospitality Management</option>
+                                    <option value="CRIM">Criminology</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h4>Family Background</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Father's Information</label>
+                                    <input type="text" id="father-name" placeholder="Full Name" required>
+                                    <input type="text" id="father-education" placeholder="Education" required>
+                                    <input type="text" id="father-occupation" placeholder="Occupation" required>
+                                    <input type="tel" id="father-contact" placeholder="Contact Number" required>
+                                    <input type="text" id="father-address" placeholder="Address" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mother's Information</label>
+                                    <input type="text" id="mother-name" placeholder="Full Name" required>
+                                    <input type="text" id="mother-education" placeholder="Education" required>
+                                    <input type="text" id="mother-occupation" placeholder="Occupation" required>
+                                    <input type="tel" id="mother-contact" placeholder="Contact Number" required>
+                                    <input type="text" id="mother-address" placeholder="Address" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Guardian's Information (if applicable)</label>
+                                <input type="text" id="guardian-name" placeholder="Full Name">
+                                <input type="text" id="guardian-education" placeholder="Education">
+                                <input type="text" id="guardian-occupation" placeholder="Occupation">
+                                <input type="tel" id="guardian-contact" placeholder="Contact Number">
+                                <input type="text" id="guardian-address" placeholder="Address">
+                            </div>
+                            <div id="siblings-container">
+                                <h4>Siblings</h4>
+                                <button type="button" class="add-sibling-btn admin-only" id="add-sibling-btn">Add Sibling</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h4>Guidance Notes</h4>
+                            <div class="form-group">
+                                <label for="guidance-notes">Notes:</label>
+                                <textarea id="guidance-notes" rows="4" placeholder="Any relevant guidance notes about the student"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" id="save-student-btn">Save Student</button>
+                            <button type="button" class="cancel-btn" id="cancel-student-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="student-list">
+                    <table id="students-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Course</th>
+                                <th>Year/Semester</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <!-- Student data will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="appointments">
+                <h2>Appointment Management</h2>
+                <div class="appointment-controls">
+                    <button id="add-appointment-btn">Schedule New Appointment</button>
+                    <div class="appointment-filters">
+                        <select id="appointment-filter">
+                            <option value="all">All Appointments</option>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="completed">Completed</option>
+                            <option value="canceled">Canceled</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="appointment-form hidden" id="appointment-form">
+                    <h3>Schedule Appointment</h3>
+                    <form id="appointment-data-form">
+                        <input type="hidden" id="appointment-id">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="appointment-student">Student:</label>
+                                <select id="appointment-student" required>
+                                    <option value="">Select Student</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-date">Date:</label>
+                                <input type="date" id="appointment-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-time">Time:</label>
+                                <input type="time" id="appointment-time" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="appointment-type">Appointment Type:</label>
+                            <select id="appointment-type" required>
+                                <option value="">Select Type</option>
+                                <option value="academic">Academic Counseling</option>
+                                <option value="career">Career Guidance</option>
+                                <option value="personal">Personal Counseling</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="appointment-status">Status:</label>
+                            <select id="appointment-status" required>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="completed">Completed</option>
+                                <option value="canceled">Canceled</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="appointment-notes">Notes:</label>
+                            <textarea id="appointment-notes" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" id="save-appointment-btn">Save Appointment</button>
+                            <button type="button" class="cancel-btn" id="cancel-appointment-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="appointment-list">
+                    <table id="appointments-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table-body">
+                            <!-- Appointment data will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="resources">
+                <h2>Guidance Resources</h2>
+                <div class="resource-controls">
+                    <button id="add-resource-btn" class="admin-only">Add New Resource</button>
+                    <input type="text" id="resource-search" placeholder="Search resources...">
+                </div>
+                
+                <div class="resource-form hidden" id="resource-form">
+                    <h3>Add/Edit Resource</h3>
+                    <form id="resource-data-form">
+                        <input type="hidden" id="resource-id">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="resource-title">Title:</label>
+                                <input type="text" id="resource-title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="resource-type">Type:</label>
+                                <select id="resource-type" required>
+                                    <option value="">Select Type</option>
+                                    <option value="article">Article</option>
+                                    <option value="video">Video</option>
+                                    <option value="document">Document</option>
+                                    <option value="link">External Link</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resource-description">Description:</label>
+                            <textarea id="resource-description" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resource-url">URL/Path:</label>
+                            <input type="text" id="resource-url" required>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" id="save-resource-btn">Save Resource</button>
+                            <button type="button" class="cancel-btn" id="cancel-resource-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="resources-grid" id="resources-container">
+                    <!-- Resource cards will be inserted here by JavaScript -->
+                </div>
+            </section>
+
+            <section id="admin">
+                <div class="access-denied" id="admin-access-denied">
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to access the admin section.</p>
+                </div>
+                <div class="admin-content hidden" id="admin-content">
+                    <h2>Admin Dashboard</h2>
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <h3>Total Users</h3>
+                            <p id="total-users">2</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Active Sessions</h3>
+                            <p id="active-sessions">1</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>System Status</h3>
+                            <p id="system-status">Online</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>User Management</h3>
+                        <table id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>admin</td>
+                                    <td>Administrator</td>
+                                    <td>2023-06-01 10:30 AM</td>
+                                    <td>
+                                        <button class="action-btn edit-btn">Edit</button>
+                                        <button class="action-btn delete-btn">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>counselor1</td>
+                                    <td>Counselor</td>
+                                    <td>2023-05-30 02:15 PM</td>
+                                    <td>
+                                        <button class="action-btn edit-btn">Edit</button>
+                                        <button class="action-btn delete-btn">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>System Settings</h3>
+                        <form id="system-settings-form">
+                            <div class="form-group">
+                                <label for="system-name">System Name:</label>
+                                <input type="text" id="system-name" value="School Guidance System">
+                            </div>
+                            <div class="form-group">
+                                <label for="maintenance-mode">Maintenance Mode:</label>
+                                <select id="maintenance-mode">
+                                    <option value="0">Disabled</option>
+                                    <option value="1">Enabled</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" id="save-settings-btn">Save Settings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Student Details Modal -->
+        <div id="student-details-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div id="student-details-content">
+                    <!-- Student details will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment Details Modal -->
+        <div id="appointment-details-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div id="appointment-details-content">
+                    <!-- Appointment details will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>School Guidance System </p>
+        </footer>
+    </div>
+
+    <script>
+        // User data (in a real app, this would be replaced with API calls to a backend)
+        const users = [
+            { id: 1, username: 'admin', password: 'admin123', role: 'admin', lastLogin: '2023-06-01 10:30 AM' },
+            { id: 2, username: 'counselor1', password: 'counselor123', role: 'counselor', lastLogin: '2023-05-30 02:15 PM' }
+        ];
+
+        // Current user session
+        let currentUser = null;
+
+        // Sample data storage (in a real app, this would be replaced with API calls)
+        let students = [
+            {
+                id: 1,
+                lastName: "Ganaden",
+                firstName: "Rainier",
+                middleName: "",
+                suffix: "",
+                dateOfBirth: "2002-03-15",
+                placeOfBirth: "Manila",
+                address: "123 Main St, Manila",
+                boardingAddress: "",
+                academicYear: "2023-2024",
+                semester: "1st",
+                studentType: "new",
+                transferInfo: "",
+                course: "Basic Education",
+                fatherName: "Juan Ganaden",
+                fatherEducation: "College Graduate",
+                fatherOccupation: "Engineer",
+                fatherContact: "09123456789",
+                fatherAddress: "123 Main St, Manila",
+                motherName: "Maria Ganaden",
+                motherEducation: "College Graduate",
+                motherOccupation: "Teacher",
+                motherContact: "09987654321",
+                motherAddress: "123 Main St, Manila",
+                guardianName: "",
+                guardianEducation: "",
+                guardianOccupation: "",
+                guardianContact: "",
+                guardianAddress: "",
+                siblings: [],
+                guidanceNotes: "Good academic performance.",
+                createdAt: "2023-01-10"
+            },
+            {
+                id: 2,
+                lastName: "Galvez",
+                firstName: "Lyka",
+                middleName: "",
+                suffix: "",
+                dateOfBirth: "2003-05-22",
+                placeOfBirth: "Cebu",
+                address: "456 Oak Ave, Cebu City",
+                boardingAddress: "",
+                academicYear: "2023-2024",
+                semester: "2nd",
+                studentType: "new",
+                transferInfo: "",
+                course: "Basic Education",
+                fatherName: "Pedro Galvez",
+                fatherEducation: "College Graduate",
+                fatherOccupation: "Manager",
+                fatherContact: "09112223333",
+                fatherAddress: "456 Oak Ave, Cebu City",
+                motherName: "Ana Galvez",
+                motherEducation: "College Graduate",
+                motherOccupation: "Nurse",
+                motherContact: "09223334444",
+                motherAddress: "456 Oak Ave, Cebu City",
+                guardianName: "",
+                guardianEducation: "",
+                guardianOccupation: "",
+                guardianContact: "",
+                guardianAddress: "",
+                siblings: [],
+                guidanceNotes: "Active in extracurricular activities.",
+                createdAt: "2023-02-15"
+            },
+            {
+                id: 3,
+                lastName: "Panganiban",
+                firstName: "Jordan",
+                middleName: "",
+                suffix: "",
+                dateOfBirth: "2001-09-10",
+                placeOfBirth: "Davao",
+                address: "789 Pine St, Davao City",
+                boardingAddress: "",
+                academicYear: "2023-2024",
+                semester: "1st",
+                studentType: "new",
+                transferInfo: "",
+                course: "Basic Education",
+                fatherName: "Carlos Panganiban",
+                fatherEducation: "High School Graduate",
+                fatherOccupation: "Farmer",
+                fatherContact: "09114445555",
+                fatherAddress: "789 Pine St, Davao City",
+                motherName: "Lucia Panganiban",
+                motherEducation: "High School Graduate",
+                motherOccupation: "Housewife",
+                motherContact: "09225556666",
+                motherAddress: "789 Pine St, Davao City",
+                guardianName: "",
+                guardianEducation: "",
+                guardianOccupation: "",
+                guardianContact: "",
+                guardianAddress: "",
+                siblings: [],
+                guidanceNotes: "Shows improvement in academics.",
+                createdAt: "2023-03-20"
+            },
+            {
+                id: 4,
+                lastName: "Dumu",
+                firstName: "Steven",
+                middleName: "",
+                suffix: "",
+                dateOfBirth: "2004-12-05",
+                placeOfBirth: "Baguio",
+                address: "321 Hilltop Rd, Baguio",
+                boardingAddress: "",
+                academicYear: "2023-2024",
+                semester: "1st",
+                studentType: "new",
+                transferInfo: "",
+                course: "Basic Education",
+                fatherName: "Mario Dumu",
+                fatherEducation: "College Graduate",
+                fatherOccupation: "Driver",
+                fatherContact: "09115557777",
+                fatherAddress: "321 Hilltop Rd, Baguio",
+                motherName: "Lorna Dumu",
+                motherEducation: "College Graduate",
+                motherOccupation: "Vendor",
+                motherContact: "09226668888",
+                motherAddress: "321 Hilltop Rd, Baguio",
+                guardianName: "",
+                guardianEducation: "",
+                guardianOccupation: "",
+                guardianContact: "",
+                guardianAddress: "",
+                siblings: [],
+                guidanceNotes: "Needs help in mathematics.",
+                createdAt: "2023-04-25"
+            }
+        ];
+
+        let appointments = [
+            {
+                id: 1,
+                studentId: 1,
+                date: "2023-06-15",
+                time: "14:00",
+                type: "career",
+                notes: "Discuss internship opportunities for summer",
+                status: "upcoming",
+                createdAt: "2023-05-20"
+            },
+            {
+                id: 2,
+                studentId: 2,
+                date: "2023-05-30",
+                time: "10:30",
+                type: "academic",
+                notes: "Course selection for next semester",
+                status: "completed",
+                createdAt: "2023-05-10"
+            }
+        ];
+
+        let resources = [
+            {
+                id: 1,
+                title: "Career Planning Guide",
+                type: "document",
+                description: "Comprehensive guide to help students plan their career paths",
+                url: "/resources/career-guide.pdf",
+                createdAt: "2023-01-05"
+            },
+            {
+                id: 2,
+                title: "Time Management Tips",
+                type: "article",
+                description: "10 effective time management strategies for students",
+                url: "/resources/time-management.html",
+                createdAt: "2023-02-12"
+            }
+        ];
+
+        // Activity logging system
+        let activityLog = [];
+
+        function addActivity(message) {
+            const timestamp = new Date().toLocaleString();
+            activityLog.unshift({ message, timestamp });
+            if (activityLog.length > 10) activityLog.pop(); // keep latest 10
+            renderRecentActivity();
+        }
+
+        function renderRecentActivity() {
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = "";
+            activityLog.forEach(entry => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${entry.message}</span><small>${entry.timestamp}</small>`;
+                activityList.appendChild(li);
+            });
+        }
+
+        // DOM elements
+        const loginPage = document.getElementById('login-page');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userRoleDisplay = document.getElementById('user-role-display');
+        const adminOnlyElements = document.querySelectorAll('.admin-only');
+        const adminContent = document.getElementById('admin-content');
+        const adminAccessDenied = document.getElementById('admin-access-denied');
+
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('section');
+        const studentForm = document.getElementById('student-form');
+        const addStudentBtn = document.getElementById('add-student-btn');
+        const cancelStudentBtn = document.getElementById('cancel-student-btn');
+        const saveStudentBtn = document.getElementById('save-student-btn');
+        const studentDataForm = document.getElementById('student-data-form');
+        const studentsTableBody = document.getElementById('students-table-body');
+        const studentSearch = document.getElementById('student-search');
+        const studentDetailsModal = document.getElementById('student-details-modal');
+        const studentDetailsContent = document.getElementById('student-details-content');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        const totalStudentsEl = document.getElementById('total-students');
+        const upcomingAppointmentsEl = document.getElementById('upcoming-appointments');
+        const availableResourcesEl = document.getElementById('available-resources');
+        const addSiblingBtn = document.getElementById('add-sibling-btn');
+        const siblingsContainer = document.getElementById('siblings-container');
+        const transferInfoContainer = document.getElementById('transfer-info-container');
+        const studentTypeSelect = document.getElementById('student-type');
+
+        // Appointment elements
+        const appointmentForm = document.getElementById('appointment-form');
+        const addAppointmentBtn = document.getElementById('add-appointment-btn');
+        const cancelAppointmentBtn = document.getElementById('cancel-appointment-btn');
+        const saveAppointmentBtn = document.getElementById('save-appointment-btn');
+        const appointmentDataForm = document.getElementById('appointment-data-form');
+        const appointmentsTableBody = document.getElementById('appointments-table-body');
+        const appointmentFilter = document.getElementById('appointment-filter');
+        const appointmentStudentSelect = document.getElementById('appointment-student');
+        const appointmentDetailsModal = document.getElementById('appointment-details-modal');
+        const appointmentDetailsContent = document.getElementById('appointment-details-content');
+
+        // Resource elements
+        const resourceForm = document.getElementById('resource-form');
+        const addResourceBtn = document.getElementById('add-resource-btn');
+        const cancelResourceBtn = document.getElementById('cancel-resource-btn');
+        const saveResourceBtn = document.getElementById('save-resource-btn');
+        const resourceDataForm = document.getElementById('resource-data-form');
+        const resourcesContainer = document.getElementById('resources-container');
+        const resourceSearch = document.getElementById('resource-search');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show login page by default
+            loginPage.style.display = 'flex';
+            appContainer.style.display = 'none';
+
+            // Add "Basic Education" to course dropdown if not already present
+            const courseSelect = document.getElementById("course");
+            if (courseSelect) {
+                const options = Array.from(courseSelect.options).map(opt => opt.value);
+                if (!options.includes("Basic Education")) {
+                    const option = document.createElement("option");
+                    option.value = "Basic Education";
+                    option.textContent = "Basic Education";
+                    courseSelect.appendChild(option);
+                }
+            }
+
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const role = document.getElementById('role').value;
+                
+                // Validate credentials
+                const user = users.find(u => 
+                    u.username === username && 
+                    u.password === password && 
+                    u.role === role
+                );
+                
+                if (user) {
+                    // Successful login
+                    currentUser = user;
+                    loginError.style.display = 'none';
+                    
+                    // Update user's last login (in a real app, this would be saved to the database)
+                    user.lastLogin = new Date().toLocaleString();
+                    
+                    // Switch to app view
+                    loginPage.style.display = 'none';
+                    appContainer.style.display = 'block';
+                    
+                    // Update UI based on role
+                    updateUIForUserRole();
+                    
+                    // Initialize the rest of the app
+                    initializeApp();
+                    
+                    // Add login activity
+                    addActivity(`User ${username} logged in as ${role}`);
+                } else {
+                    // Failed login
+                    loginError.style.display = 'block';
+                }
+            });
+
+            // Logout button
+            logoutBtn.addEventListener('click', function() {
+                if (currentUser) {
+                    addActivity(`User ${currentUser.username} logged out`);
+                }
+                currentUser = null;
+                appContainer.style.display = 'none';
+                loginPage.style.display = 'flex';
+                loginForm.reset();
+            });
+        });
+
+        // Update UI based on user role
+        function updateUIForUserRole() {
+            if (currentUser) {
+                // Display user role
+                userRoleDisplay.textContent = `Logged in as: ${currentUser.role === 'admin' ? 'Administrator' : 'Counselor'}`;
+                
+                // Show/hide admin-only elements
+                adminOnlyElements.forEach(el => {
+                    if (currentUser.role === 'admin') {
+                        el.classList.add('show');
+                        if (el.classList.contains('inline')) {
+                            el.style.display = 'inline-block';
+                        } else {
+                            el.style.display = 'block';
+                        }
+                    } else {
+                        el.classList.remove('show');
+                        el.style.display = 'none';
+                    }
+                });
+                
+                // Handle admin section access
+                if (currentUser.role === 'admin') {
+                    adminContent.classList.remove('hidden');
+                    adminAccessDenied.style.display = 'none';
+                } else {
+                    adminContent.classList.add('hidden');
+                    adminAccessDenied.style.display = 'block';
+                }
+            }
+        }
+
+        // Initialize the main application
+        function initializeApp() {
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Update active nav link
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    sections.forEach(section => section.classList.remove('active-section'));
+                    document.getElementById(sectionId).classList.add('active-section');
+                });
+            });
+
+            // Student form toggle
+            addStudentBtn.addEventListener('click', function() {
+                studentForm.classList.remove('hidden');
+                studentDataForm.reset();
+                document.getElementById('student-id').value = '';
+                // Clear sibling containers except the first one
+                while (siblingsContainer.children.length > 2) {
+                    siblingsContainer.removeChild(siblingsContainer.lastChild);
+                }
+            });
+
+            cancelStudentBtn.addEventListener('click', function() {
+                studentForm.classList.add('hidden');
+            });
+
+            // Student type change handler
+            studentTypeSelect.addEventListener('change', function() {
+                if (this.value === 'transfer') {
+                    transferInfoContainer.style.display = 'block';
+                } else {
+                    transferInfoContainer.style.display = 'none';
+                }
+            });
+
+            // Add sibling handler
+            addSiblingBtn.addEventListener('click', function() {
+                const siblingContainer = document.createElement('div');
+                siblingContainer.className = 'sibling-container';
+                siblingContainer.innerHTML = `
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sibling Name</label>
+                            <input type="text" class="sibling-name" placeholder="Full Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" class="sibling-age" placeholder="Age">
+                        </div>
+                        <div class="form-group">
+                            <label>Education Level</label>
+                            <input type="text" class="sibling-education" placeholder="Education Level">
+                        </div>
+                    </div>
+                    <button type="button" class="remove-sibling-btn">Remove</button>
+                `;
+                siblingsContainer.appendChild(siblingContainer);
+                
+                // Add event listener to the new remove button
+                siblingContainer.querySelector('.remove-sibling-btn').addEventListener('click', function() {
+                    siblingsContainer.removeChild(siblingContainer);
+                });
+            });
+
+            // Student form submission
+            studentDataForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStudent();
+            });
+
+            // Student search
+            studentSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredStudents = students.filter(student => {
+                    const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+                    return fullName.includes(searchTerm) || 
+                           student.course.toLowerCase().includes(searchTerm) ||
+                           student.studentType.toLowerCase().includes(searchTerm);
+                });
+                renderStudentsTable(filteredStudents);
+            });
+
+            // Appointment form toggle
+            addAppointmentBtn.addEventListener('click', function() {
+                appointmentForm.classList.remove('hidden');
+                appointmentDataForm.reset();
+                document.getElementById('appointment-id').value = '';
+                populateStudentDropdown();
+            });
+
+            cancelAppointmentBtn.addEventListener('click', function() {
+                appointmentForm.classList.add('hidden');
+            });
+
+            // Appointment form submission
+            appointmentDataForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveAppointment();
+            });
+
+            // Appointment filter
+            appointmentFilter.addEventListener('change', function() {
+                renderAppointmentsTable(appointments);
+            });
+
+            // Resource form toggle
+            addResourceBtn.addEventListener('click', function() {
+                resourceForm.classList.remove('hidden');
+                resourceDataForm.reset();
+                document.getElementById('resource-id').value = '';
+            });
+
+            cancelResourceBtn.addEventListener('click', function() {
+                resourceForm.classList.add('hidden');
+            });
+
+            // Resource form submission
+            resourceDataForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveResource();
+            });
+
+            // Resource search
+            resourceSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredResources = resources.filter(resource => {
+                    return resource.title.toLowerCase().includes(searchTerm) || 
+                           resource.description.toLowerCase().includes(searchTerm) ||
+                           resource.type.toLowerCase().includes(searchTerm);
+                });
+                renderResources(filteredResources);
+            });
+
+            // Modal close handlers
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    studentDetailsModal.style.display = 'none';
+                    appointmentDetailsModal.style.display = 'none';
+                });
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === studentDetailsModal) {
+                    studentDetailsModal.style.display = 'none';
+                }
+                if (e.target === appointmentDetailsModal) {
+                    appointmentDetailsModal.style.display = 'none';
+                }
+            });
+
+            // Initialize data
+            updateDashboardStats();
+            renderStudentsTable(students);
+            renderAppointmentsTable(appointments);
+            renderResources(resources);
+            renderRecentActivity();
+        }
+
+        // Save student function
+        function saveStudent() {
+            const studentId = document.getElementById('student-id').value;
+            const isEdit = !!studentId;
+            
+            // Gather sibling data
+            const siblingContainers = document.querySelectorAll('.sibling-container');
+            const siblings = Array.from(siblingContainers).map(container => {
+                return {
+                    name: container.querySelector('.sibling-name').value,
+                    age: container.querySelector('.sibling-age').value,
+                    education: container.querySelector('.sibling-education').value
+                };
+            });
+            
+            const studentData = {
+                id: isEdit ? parseInt(studentId) : students.length + 1,
+                lastName: document.getElementById('last-name').value,
+                firstName: document.getElementById('first-name').value,
+                middleName: document.getElementById('middle-name').value,
+                suffix: document.getElementById('suffix').value,
+                dateOfBirth: document.getElementById('date-of-birth').value,
+                placeOfBirth: document.getElementById('place-of-birth').value,
+                address: document.getElementById('address').value,
+                boardingAddress: document.getElementById('boarding-address').value,
+                academicYear: document.getElementById('academic-year').value,
+                semester: document.getElementById('semester').value,
+                studentType: document.getElementById('student-type').value,
+                transferInfo: document.getElementById('transfer-info').value,
+                course: document.getElementById('course').value,
+                fatherName: document.getElementById('father-name').value,
+                fatherEducation: document.getElementById('father-education').value,
+                fatherOccupation: document.getElementById('father-occupation').value,
+                fatherContact: document.getElementById('father-contact').value,
+                fatherAddress: document.getElementById('father-address').value,
+                motherName: document.getElementById('mother-name').value,
+                motherEducation: document.getElementById('mother-education').value,
+                motherOccupation: document.getElementById('mother-occupation').value,
+                motherContact: document.getElementById('mother-contact').value,
+                motherAddress: document.getElementById('mother-address').value,
+                guardianName: document.getElementById('guardian-name').value,
+                guardianEducation: document.getElementById('guardian-education').value,
+                guardianOccupation: document.getElementById('guardian-occupation').value,
+                guardianContact: document.getElementById('guardian-contact').value,
+                guardianAddress: document.getElementById('guardian-address').value,
+                siblings: siblings,
+                guidanceNotes: document.getElementById('guidance-notes').value,
+                createdAt: isEdit ? students.find(s => s.id === parseInt(studentId)).createdAt : new Date().toISOString().split('T')[0]
+            };
+            
+            if (isEdit) {
+                // Update existing student
+                const index = students.findIndex(s => s.id === parseInt(studentId));
+                students[index] = studentData;
+                addActivity(`Updated student record for ${studentData.firstName} ${studentData.lastName}`);
+            } else {
+                // Add new student
+                students.push(studentData);
+                addActivity(`Added new student: ${studentData.firstName} ${studentData.lastName}`);
+            }
+            
+            // Update UI
+            studentForm.classList.add('hidden');
+            renderStudentsTable(students);
+            updateDashboardStats();
+            renderRecentActivity();
+        }
+
+        // Save appointment function
+        function saveAppointment() {
+            const appointmentId = document.getElementById('appointment-id').value;
+            const isEdit = !!appointmentId;
+            
+            const appointmentData = {
+                id: isEdit ? parseInt(appointmentId) : appointments.length + 1,
+                studentId: parseInt(document.getElementById('appointment-student').value),
+                date: document.getElementById('appointment-date').value,
+                time: document.getElementById('appointment-time').value,
+                type: document.getElementById('appointment-type').value,
+                status: document.getElementById('appointment-status').value,
+                notes: document.getElementById('appointment-notes').value,
+                createdAt: isEdit ? appointments.find(a => a.id === parseInt(appointmentId)).createdAt : new Date().toISOString().split('T')[0]
+            };
+            
+            if (isEdit) {
+                // Update existing appointment
+                const index = appointments.findIndex(a => a.id === parseInt(appointmentId));
+                appointments[index] = appointmentData;
+                addActivity(`Updated appointment for student ID ${appointmentData.studentId}`);
+            } else {
+                // Add new appointment
+                appointments.push(appointmentData);
+                addActivity(`Scheduled new appointment for student ID ${appointmentData.studentId}`);
+            }
+            
+            // Update UI
+            appointmentForm.classList.add('hidden');
+            renderAppointmentsTable(appointments);
+            updateDashboardStats();
+            renderRecentActivity();
+        }
+
+        // Save resource function
+        function saveResource() {
+            const resourceId = document.getElementById('resource-id').value;
+            const isEdit = !!resourceId;
+            
+            const resourceData = {
+                id: isEdit ? parseInt(resourceId) : resources.length + 1,
+                title: document.getElementById('resource-title').value,
+                type: document.getElementById('resource-type').value,
+                description: document.getElementById('resource-description').value,
+                url: document.getElementById('resource-url').value,
+                createdAt: isEdit ? resources.find(r => r.id === parseInt(resourceId)).createdAt : new Date().toISOString().split('T')[0]
+            };
+            
+            if (isEdit) {
+                // Update existing resource
+                const index = resources.findIndex(r => r.id === parseInt(resourceId));
+                resources[index] = resourceData;
+                addActivity(`Updated resource: ${resourceData.title}`);
+            } else {
+                // Add new resource
+                resources.push(resourceData);
+                addActivity(`Added new resource: ${resourceData.title}`);
+            }
+            
+            // Update UI
+            resourceForm.classList.add('hidden');
+            renderResources(resources);
+            updateDashboardStats();
+            renderRecentActivity();
+        }
+
+        // Render students table
+        function renderStudentsTable(studentsData) {
+            studentsTableBody.innerHTML = '';
+            
+            studentsData.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td><a href="#" class="student-name-link" data-id="${student.id}">${student.lastName}, ${student.firstName}</a></td>
+                    <td>${student.course}</td>
+                    <td>${student.academicYear} (${student.semester})</td>
+                    <td>${student.studentType}</td>
+                    <td>
+                        <button class="action-btn edit-btn" data-id="${student.id}">Edit</button>
+                        <button class="action-btn delete-btn admin-only" data-id="${student.id}">Delete</button>
+                    </td>
+                `;
+                studentsTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to student name links
+            document.querySelectorAll('.student-name-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const studentId = parseInt(this.getAttribute('data-id'));
+                    showStudentDetails(studentId);
+                });
+            });
+            
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const studentId = parseInt(this.getAttribute('data-id'));
+                    editStudent(studentId);
+                });
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const studentId = parseInt(this.getAttribute('data-id'));
+                    if (confirm('Are you sure you want to delete this student record?')) {
+                        deleteStudent(studentId);
+                    }
+                });
+            });
+            
+            // Update admin-only buttons visibility
+            if (currentUser && currentUser.role === 'admin') {
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.style.display = 'inline-block';
+                });
+            }
+        }
+
+        // Render appointments table
+        function renderAppointmentsTable(appointmentsData) {
+            appointmentsTableBody.innerHTML = '';
+            
+            const filterValue = appointmentFilter.value;
+            let filteredAppointments = appointmentsData;
+            
+            if (filterValue !== 'all') {
+                filteredAppointments = appointmentsData.filter(a => a.status === filterValue);
+            }
+            
+            filteredAppointments.forEach(appointment => {
+                const student = students.find(s => s.id === appointment.studentId);
+                const studentName = student ? `${student.lastName}, ${student.firstName}` : 'Unknown Student';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${appointment.id}</td>
+                    <td><a href="#" class="student-name-link" data-id="${appointment.studentId}">${studentName}</a></td>
+                    <td>${appointment.date} at ${appointment.time}</td>
+                    <td>${appointment.type}</td>
+                    <td><span class="status-badge status-${appointment.status}">${appointment.status}</span></td>
+                    <td>
+                        <button class="action-btn edit-btn" data-id="${appointment.id}">Edit</button>
+                        <button class="action-btn delete-btn" data-id="${appointment.id}">Delete</button>
+                    </td>
+                `;
+                appointmentsTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to student name links
+            document.querySelectorAll('#appointments-table .student-name-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const studentId = parseInt(this.getAttribute('data-id'));
+                    showStudentDetails(studentId);
+                });
+            });
+            
+            // Add event listeners to edit buttons
+            document.querySelectorAll('#appointments-table .edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const appointmentId = parseInt(this.getAttribute('data-id'));
+                    editAppointment(appointmentId);
+                });
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('#appointments-table .delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const appointmentId = parseInt(this.getAttribute('data-id'));
+                    if (confirm('Are you sure you want to delete this appointment?')) {
+                        deleteAppointment(appointmentId);
+                    }
+                });
+            });
+        }
+
+        // Render resources
+        function renderResources(resourcesData) {
+            resourcesContainer.innerHTML = '';
+            
+            resourcesData.forEach(resource => {
+                const resourceCard = document.createElement('div');
+                resourceCard.className = 'resource-card';
+                resourceCard.innerHTML = `
+                    <h3>${resource.title}</h3>
+                    <span class="resource-type">${resource.type}</span>
+                    <p class="resource-description">${resource.description}</p>
+                    <a href="${resource.url}" class="resource-link" target="_blank">View Resource</a>
+                    <div class="resource-actions">
+                        <button class="action-btn edit-btn admin-only" data-id="${resource.id}">Edit</button>
+                        <button class="action-btn delete-btn admin-only" data-id="${resource.id}">Delete</button>
+                    </div>
+                `;
+                resourcesContainer.appendChild(resourceCard);
+            });
+            
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.resource-card .edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const resourceId = parseInt(this.getAttribute('data-id'));
+                    editResource(resourceId);
+                });
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.resource-card .delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const resourceId = parseInt(this.getAttribute('data-id'));
+                    if (confirm('Are you sure you want to delete this resource?')) {
+                        deleteResource(resourceId);
+                    }
+                });
+            });
+            
+            // Update admin-only buttons visibility
+            if (currentUser && currentUser.role === 'admin') {
+                document.querySelectorAll('.resource-card .edit-btn, .resource-card .delete-btn').forEach(btn => {
+                    btn.style.display = 'inline-block';
+                });
+            }
+        }
+
+        // Show student details in modal
+        function showStudentDetails(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            let siblingsHtml = '';
+            if (student.siblings && student.siblings.length > 0) {
+                siblingsHtml = student.siblings.map(sibling => `
+                    <div class="detail-row">
+                        <div class="detail-label">Sibling Name:</div>
+                        <div class="detail-value">${sibling.name}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Age:</div>
+                        <div class="detail-value">${sibling.age}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Education:</div>
+                        <div class="detail-value">${sibling.education}</div>
+                    </div>
+                    <hr>
+                `).join('');
+            } else {
+                siblingsHtml = '<p>No siblings recorded</p>';
+            }
+            
+            studentDetailsContent.innerHTML = `
+                <h3>Student Details</h3>
+                
+                <div class="student-details-section">
+                    <h4>Basic Information</h4>
+                    <div class="detail-row">
+                        <div class="detail-label">Full Name:</div>
+                        <div class="detail-value">${student.lastName}, ${student.firstName} ${student.middleName} ${student.suffix}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Date of Birth:</div>
+                        <div class="detail-value">${student.dateOfBirth}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Place of Birth:</div>
+                        <div class="detail-value">${student.placeOfBirth}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Home Address:</div>
+                        <div class="detail-value">${student.address}</div>
+                    </div>
+                    ${student.boardingAddress ? `
+                    <div class="detail-row">
+                        <div class="detail-label">Boarding Address:</div>
+                        <div class="detail-value">${student.boardingAddress}</div>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <div class="student-details-section">
+                    <h4>Academic Information</h4>
+                    <div class="detail-row">
+                        <div class="detail-label">Academic Year:</div>
+                        <div class="detail-value">${student.academicYear}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Semester:</div>
+                        <div class="detail-value">${student.semester}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Student Type:</div>
+                        <div class="detail-value">${student.studentType}</div>
+                    </div>
+                    ${student.transferInfo ? `
+                    <div class="detail-row">
+                        <div class="detail-label">Transfer Information:</div>
+                        <div class="detail-value">${student.transferInfo}</div>
+                    </div>
+                    ` : ''}
+                    <div class="detail-row">
+                        <div class="detail-label">Course:</div>
+                        <div class="detail-value">${student.course}</div>
+                    </div>
+                </div>
+                
+                <div class="student-details-section">
+                    <h4>Family Background</h4>
+                    <div class="detail-row">
+                        <div class="detail-label">Father's Name:</div>
+                        <div class="detail-value">${student.fatherName}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Father's Education:</div>
+                        <div class="detail-value">${student.fatherEducation}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Father's Occupation:</div>
+                        <div class="detail-value">${student.fatherOccupation}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Father's Contact:</div>
+                        <div class="detail-value">${student.fatherContact}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Father's Address:</div>
+                        <div class="detail-value">${student.fatherAddress}</div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-label">Mother's Name:</div>
+                        <div class="detail-value">${student.motherName}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Mother's Education:</div>
+                        <div class="detail-value">${student.motherEducation}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Mother's Occupation:</div>
+                        <div class="detail-value">${student.motherOccupation}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Mother's Contact:</div>
+                        <div class="detail-value">${student.motherContact}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Mother's Address:</div>
+                        <div class="detail-value">${student.motherAddress}</div>
+                    </div>
+                    
+                    ${student.guardianName ? `
+                    <div class="detail-row">
+                        <div class="detail-label">Guardian's Name:</div>
+                        <div class="detail-value">${student.guardianName}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Guardian's Education:</div>
+                        <div class="detail-value">${student.guardianEducation}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Guardian's Occupation:</div>
+                        <div class="detail-value">${student.guardianOccupation}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Guardian's Contact:</div>
+                        <div class="detail-value">${student.guardianContact}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Guardian's Address:</div>
+                        <div class="detail-value">${student.guardianAddress}</div>
+                    </div>
+                    ` : ''}
+                    
+                    <h5>Siblings</h5>
+                    ${siblingsHtml}
+                </div>
+                
+                <div class="student-details-section">
+                    <h4>Guidance Notes</h4>
+                    <p>${student.guidanceNotes || 'No guidance notes recorded'}</p>
+                </div>
+            `;
+            
+            studentDetailsModal.style.display = 'block';
+        }
+
+        // Show appointment details in modal
+        function showAppointmentDetails(appointmentId) {
+            const appointment = appointments.find(a => a.id === appointmentId);
+            if (!appointment) return;
+            
+            const student = students.find(s => s.id === appointment.studentId);
+            const studentName = student ? `${student.lastName}, ${student.firstName}` : 'Unknown Student';
+            
+            appointmentDetailsContent.innerHTML = `
+                <h3>Appointment Details</h3>
+                
+                <div class="student-details-section">
+                    <h4>Basic Information</h4>
+                    <div class="detail-row">
+                        <div class="detail-label">Student:</div>
+                        <div class="detail-value">${studentName}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Date:</div>
+                        <div class="detail-value">${appointment.date}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Time:</div>
+                        <div class="detail-value">${appointment.time}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Type:</div>
+                        <div class="detail-value">${appointment.type}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Status:</div>
+                        <div class="detail-value"><span class="status-badge status-${appointment.status}">${appointment.status}</span></div>
+                    </div>
+                </div>
+                
+                <div class="student-details-section">
+                    <h4>Notes</h4>
+                    <p>${appointment.notes || 'No notes recorded'}</p>
+                </div>
+            `;
+            
+            appointmentDetailsModal.style.display = 'block';
+        }
+
+        // Edit student function
+        function editStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            // Fill form with student data
+            document.getElementById('student-id').value = student.id;
+            document.getElementById('last-name').value = student.lastName;
+            document.getElementById('first-name').value = student.firstName;
+            document.getElementById('middle-name').value = student.middleName;
+            document.getElementById('suffix').value = student.suffix;
+            document.getElementById('date-of-birth').value = student.dateOfBirth;
+            document.getElementById('place-of-birth').value = student.placeOfBirth;
+            document.getElementById('address').value = student.address;
+            document.getElementById('boarding-address').value = student.boardingAddress;
+            document.getElementById('academic-year').value = student.academicYear;
+            document.getElementById('semester').value = student.semester;
+            document.getElementById('student-type').value = student.studentType;
+            document.getElementById('transfer-info').value = student.transferInfo;
+            document.getElementById('course').value = student.course;
+            document.getElementById('father-name').value = student.fatherName;
+            document.getElementById('father-education').value = student.fatherEducation;
+            document.getElementById('father-occupation').value = student.fatherOccupation;
+            document.getElementById('father-contact').value = student.fatherContact;
+            document.getElementById('father-address').value = student.fatherAddress;
+            document.getElementById('mother-name').value = student.motherName;
+            document.getElementById('mother-education').value = student.motherEducation;
+            document.getElementById('mother-occupation').value = student.motherOccupation;
+            document.getElementById('mother-contact').value = student.motherContact;
+            document.getElementById('mother-address').value = student.motherAddress;
+            document.getElementById('guardian-name').value = student.guardianName;
+            document.getElementById('guardian-education').value = student.guardianEducation;
+            document.getElementById('guardian-occupation').value = student.guardianOccupation;
+            document.getElementById('guardian-contact').value = student.guardianContact;
+            document.getElementById('guardian-address').value = student.guardianAddress;
+            document.getElementById('guidance-notes').value = student.guidanceNotes;
+            
+            // Clear existing sibling containers
+            while (siblingsContainer.children.length > 2) {
+                siblingsContainer.removeChild(siblingsContainer.lastChild);
+            }
+            
+            // Add sibling fields for each sibling
+            if (student.siblings && student.siblings.length > 0) {
+                student.siblings.forEach(sibling => {
+                    const siblingContainer = document.createElement('div');
+                    siblingContainer.className = 'sibling-container';
+                    siblingContainer.innerHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Sibling Name</label>
+                                <input type="text" class="sibling-name" placeholder="Full Name" value="${sibling.name}">
+                            </div>
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input type="number" class="sibling-age" placeholder="Age" value="${sibling.age}">
+                            </div>
+                            <div class="form-group">
+                                <label>Education Level</label>
+                                <input type="text" class="sibling-education" placeholder="Education Level" value="${sibling.education}">
+                            </div>
+                        </div>
+                        <button type="button" class="remove-sibling-btn">Remove</button>
+                    `;
+                    siblingsContainer.appendChild(siblingContainer);
+                    
+                    // Add event listener to the new remove button
+                    siblingContainer.querySelector('.remove-sibling-btn').addEventListener('click', function() {
+                        siblingsContainer.removeChild(siblingContainer);
+                    });
+                });
+            }
+            
+            // Show/hide transfer info based on student type
+            if (student.studentType === 'transfer') {
+                transferInfoContainer.style.display = 'block';
+            } else {
+                transferInfoContainer.style.display = 'none';
+            }
+            
+            // Show the form
+            studentForm.classList.remove('hidden');
+        }
+
+        // Edit appointment function
+        function editAppointment(appointmentId) {
+            const appointment = appointments.find(a => a.id === appointmentId);
+            if (!appointment) return;
+            
+            // Fill form with appointment data
+            document.getElementById('appointment-id').value = appointment.id;
+            document.getElementById('appointment-date').value = appointment.date;
+            document.getElementById('appointment-time').value = appointment.time;
+            document.getElementById('appointment-type').value = appointment.type;
+            document.getElementById('appointment-status').value = appointment.status;
+            document.getElementById('appointment-notes').value = appointment.notes;
+            
+            // Populate student dropdown and set the current student
+            populateStudentDropdown();
+            document.getElementById('appointment-student').value = appointment.studentId;
+            
+            // Show the form
+            appointmentForm.classList.remove('hidden');
+        }
+
+        // Edit resource function
+        function editResource(resourceId) {
+            const resource = resources.find(r => r.id === resourceId);
+            if (!resource) return;
+            
+            // Fill form with resource data
+            document.getElementById('resource-id').value = resource.id;
+            document.getElementById('resource-title').value = resource.title;
+            document.getElementById('resource-type').value = resource.type;
+            document.getElementById('resource-description').value = resource.description;
+            document.getElementById('resource-url').value = resource.url;
+            
+            // Show the form
+            resourceForm.classList.remove('hidden');
+        }
+
+        // Delete student function
+        function deleteStudent(studentId) {
+            const index = students.findIndex(s => s.id === studentId);
+            if (index === -1) return;
+            
+            const student = students[index];
+            students.splice(index, 1);
+            
+            // Also delete any appointments for this student
+            appointments = appointments.filter(a => a.studentId !== studentId);
+            
+            addActivity(`Deleted student record for ${student.firstName} ${student.lastName}`);
+            
+            // Update UI
+            renderStudentsTable(students);
+            renderAppointmentsTable(appointments);
+            updateDashboardStats();
+            renderRecentActivity();
+        }
+
+        // Delete appointment function
+        function deleteAppointment(appointmentId) {
+            const index = appointments.findIndex(a => a.id === appointmentId);
+            if (index === -1) return;
+            
+            const appointment = appointments[index];
+            appointments.splice(index, 1);
+            
+            addActivity(`Deleted appointment ID ${appointmentId}`);
+            
+            // Update UI
+            renderAppointmentsTable(appointments);
+            updateDashboardStats();
+            renderRecentActivity();
+        }
+
+        // Delete resource function
+        function deleteResource(resourceId) {
+            const index = resources.findIndex(r => r.id === resourceId);
+            if (index === -1) return;
+            
+            const resource = resources[index];
+            resources.splice(index, 1);
+            
+            addActivity(`Deleted resource: ${resource.title}`);
+            
+            // Update UI
+            renderResources(resources);
+            updateDashboardStats();
+            renderRecentActivity();
+        }
+
+        // Populate student dropdown for appointments
+        function populateStudentDropdown() {
+            appointmentStudentSelect.innerHTML = '<option value="">Select Student</option>';
+            
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.lastName}, ${student.firstName}`;
+                appointmentStudentSelect.appendChild(option);
+            });
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats() {
+            totalStudentsEl.textContent = students.length;
+            
+            const upcomingApps = appointments.filter(a => a.status === 'upcoming').length;
+            upcomingAppointmentsEl.textContent = upcomingApps;
+            
+            availableResourcesEl.textContent = resources.length;
+        }
+    </script>
+</body>
+</html>
